@@ -1,14 +1,14 @@
 import logo from './logo.svg';
 import './App.css';
+import Message from './Message';
 
-function App({message}) {
+function App() {
+  const name = 'lizon';
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          {message}
-        </p>
+        <Message name={name} />
         <a
           className="App-link"
           href="https://reactjs.org"
