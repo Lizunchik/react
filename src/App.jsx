@@ -1,78 +1,104 @@
-import logo from './logo.svg';
 import './App.css';
 import Message from './Message';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Card, CardContent, Typography, CardActions, Button } from "@mui/material";
+import ListSubheader from '@mui/material/ListSubheader';
+import List from '@mui/material/List';
+import { Box, TextField } from '@mui/material';
+import Chats from './Chats';
 
 
 function App() {
-  const name = 'lizon';
-  const [messageList, setMessageList] = useState([]);
-  const [text, setText] = useState('');
   const [author, setAuthor] = useState('');
+  const [message, setMessage] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [chatList] = useState([
+    { name: "vasya", id: 1 },
+    { name: "vova", id: 2 },
+    { name: "pasha", id: 3 },
+  ]);
+  const inputRef = useRef(null);
 
-  useEffect(() => {
-    setTimeout(() => {
-      botAnswer(messageList);
-    }, 1000);
-  }, [messageList]);
 
+  const onButtonClick = () => {
+    let newId = 1;
+    if (messages.length) {
+      newId = messages[messages.length - 1].id + 1;
+    }
+    if (author.length) {
+      setMessages(messages => [...messages, { text: message, author: author, id: newId }])
+    }
+    else {
+      alert('author name needed');
+    }
+  };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    setMessageList(prevState => [...prevState,
-    {
-      id: getId(prevState),
-      author: author,
-      text: text
-    }]);
-  }
-
-  function getId(array) {
-    return array.length ? array[array.length - 1].id + 1 : 0;
-  }
-  function botAnswer() {
-    const lastMessage = messageList[messageList.length - 1];
-    if (lastMessage && lastMessage.author) {
-      setMessageList(prevState => [...prevState, {
-        id: getId(prevState),
-        text: `сообщение автора ${lastMessage.author} отправлено`
-      }]);
+  function focusTextField(input) {
+    if (input) {
+      input.focus();
     }
   }
+  useEffect(() => {
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage && lastMessage.author) {
+      setTimeout(() => {
+        alert(`${author}, message sent`)
+      }, 1500);
+    }
+    focusTextField(inputRef.current);
+  }, [messages])
+
+
+
 
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Message name={name} />
+
         <div>
-          <form onSubmit={handleSubmit}>
-            <label>Текст</label>
-            <input type="text" value={text} onChange={({ target }) => setText(target.value)} />
-            <br />
-            <label>Автор</label>
-            <input type="text" value={author} onChange={({ target }) => setAuthor(target.value)} />
-            <br />
-            <button type='submit'>Добавить сообщение</button>
-          </form>
-          {messageList.map(item => {
-            return (
-              <div key={item.id}>
-                {item.author && <p>Автор: {item.author}</p>}
-                <p>{item.author && <span>Текст:</span>} {item.text}</p>
-              </div>
-            )
-          })}
+          <List
+            sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+            component="nav"
+            aria-labelledby="nested-list-subheader"
+            subheader={
+              <ListSubheader component="div" id="nested-list-subheader">
+                Nested List Items
+              </ListSubheader>
+            }
+          >
+            {chatList.map(item => {
+              return (
+                <Chats name={item.name} key={item.id} />
+              )
+            })}
+          </List>
+          <Box
+            component="form"
+            noValidate
+            autoComplete='off'
+          >
+            <TextField id="outlined-required" required
+              fullWidth
+              label="Author Name"
+              value={author}
+              onChange={({ target }) => setAuthor(target.value)}
+            />
+            <TextField id="filled-basic"
+              label="Message text"
+              multiline
+              value={message}
+              inputRef={inputRef}
+              onChange={({ target }) => setMessage(target.value)}
+            />
+            <Button fullWidth onClick={onButtonClick}>Send</Button>
+          </Box>
         </div>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        {messages.map(e => {
+          return (
+            <Message author={e.author} text={e.text} key={e.id} />
+          )
+        })}
+
       </header >
     </div >
   );
