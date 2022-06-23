@@ -6,7 +6,9 @@
   height: 40vmin;
   pointer-events: none;
 }
-
+.MuiList-root{
+  color: black;
+}
 .App-message {
   color: darkorchid;
 }
@@ -18,7 +20,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: wheat;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
