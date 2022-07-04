@@ -17,12 +17,16 @@ const Messages = () => {
     });
 
     const deleteMessage = (id) => {
-        dispatch({
+      const cancel =  () => dispatch({
             type: DELETE_MESSAGE,
-            payload: id
+            payload: +id,
+            meta: {
+                delay: 3000
+            }
         }
-
+        
         )
+        cancel();
     }
     const addMessage = () => {
         const obj = {
