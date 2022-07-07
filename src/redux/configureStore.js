@@ -1,40 +1,18 @@
 import { applyMiddleware, combineReducers, createStore } from 'redux';
-import { chatsReducer } from './reducers/chatsReducer/chatsReducer';
-import { messagesReducer } from './reducers/messagesReducer/messagesReducer';
 import { createLogger } from 'redux-logger/src';
+import gistsReducer from './reducers/gistsReducer';
+import thunkMiddleware from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 const logger = createLogger({
     collapsed: true,
     diff: true
 }) 
 
-const loggerOld = store => next => action => {
-    console.log('dispatching', action);
-    console.log('before', store.getState());
-
-    let result = next(action);
-    console.log('after', store.getState());
-
-    return result;
-}
-
-const time = store => next => action => {
-    const delay = action?.meta?.delay;
-    if (!delay) {
-        return next(action);
-    }
-
-    const timeOut = setTimeout(() => next(action), delay);
-
-    return () => {
-        console.log('deleting...');
-        clearTimeout(timeOut);
-    }
-}
 
 const rootReducer = combineReducers({
-    chats: chatsReducer,
-    messages: messagesReducer
+   // chats: chatsReducer,
+  //  messages: messagesReducer,
+    gists: gistsReducer
 });
-
-export const store = createStore(rootReducer, applyMiddleware(logger, time));
+export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
