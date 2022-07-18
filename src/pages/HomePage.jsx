@@ -1,7 +1,13 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { logoutInitiate } from '../redux/reducers/userReducer/userReducer';
 
 const HomePage = () => {
+    const dispatch = useDispatch();
+    const logout = ()=>{
+        dispatch(logoutInitiate)
+    }
     return (
         <div>
             Home
@@ -16,7 +22,7 @@ const HomePage = () => {
                     Профиль
                 </h1>
             </Link>
-
+        <button onClick={logout}>Exit</button>
         </div>
     );
 };
